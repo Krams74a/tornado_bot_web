@@ -24,7 +24,7 @@ export const appReducer = (state = initialState, action) => {
 export const initializingSuccess = () => ({type: INITIALIZED_SUCCESS})
 
 export const initializeApp = () => (dispatch) => {
-    let promise = dispatch(getNodes())
+    dispatch(getNodes())
     let logsPromise = dispatch(getLastLogs())
     logsPromise.then(() => {
         dispatch(initializingSuccess())

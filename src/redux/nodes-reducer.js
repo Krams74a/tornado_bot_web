@@ -161,14 +161,15 @@ export const getNodes = () => async (dispatch) => {
         let nodeName = parseInt(node.id.slice(4))
         if ((nodeName < 337) || (nodeName > 384)) {
             nodeName = nodeName.toString()
-            if (nodeName.lenght == 1) {
+            if (nodeName.lenght === 1) {
                 nodeName = "00" + nodeName
             }
-            if (nodeName.lenght == 2) {
+            if (nodeName.lenght === 2) {
                 nodeName = "0" + nodeName
             }
             return nodeName
         }
+        return 0
     });
     dispatch(setNodesList(newData))
     let racks = [

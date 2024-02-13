@@ -3,25 +3,20 @@ import s from "./Server.module.css"
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
-import LogBlock from "../NodeProfile/LogBlock/LogBlock";
-import { getNodes } from "../../redux/nodes-reducer"
 import { initializeApp } from "../../redux/app-reducer";
 import React from "react"
-import { useEffect } from "react";
 
 
 
 const Server = (props) => {
-     console.log(props)
-     useEffect(() => {
-          props.initializeApp()
-     }, [])
+
+
 
 
      const now = new Date();
      let hours = now.getHours().toString()
      let minutes = now.getMinutes().toString()
-     if (minutes.length == 1) {
+     if (minutes.length === 1) {
           minutes = "0" + minutes
      }
      let updateTime = hours + ":" + minutes

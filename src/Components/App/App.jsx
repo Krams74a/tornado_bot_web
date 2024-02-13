@@ -1,8 +1,6 @@
 import Header from '../Header/Header';
 import s from "./App.module.css"
-import Server from "../Server/Server"
-import store from "../../redux/store-redux"
-import { connect, Provider } from "react-redux";
+import { connect } from "react-redux";
 import React from "react"
 import { initializeApp } from "../../redux/app-reducer"
 import ServerContainer from '../Server/Server';

@@ -1,6 +1,4 @@
-import { useState } from "react";
 import s from "./ListItem.module.css"
-import Table from 'react-bootstrap/Table';
 
 const ListItem = (props) => {
     console.log(props)
@@ -21,6 +19,8 @@ const ListItem = (props) => {
             break;
         case "ожидает ремонта":
             emoji = "🟠"
+            break;
+        default:
             break;
     }
 

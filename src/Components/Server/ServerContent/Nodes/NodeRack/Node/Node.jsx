@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import s from "./Node.module.css"
 import 'react-tooltip/dist/react-tooltip.css'
-import { Tooltip } from 'react-tooltip'
-import ToolTip from "./ToolTip/ToolTip"
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 

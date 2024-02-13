@@ -3,19 +3,17 @@ import Nodes from "./Nodes/Nodes"
 import s from "./ServerContent.module.css"
 
 const ServerContent = (props) => {
-     console.log(props.rack)
      let workingCount = 0
      
      props.rack.forEach(shelf => {
           shelf.forEach(node => {
-               console.log(node)
-               if (node.statement == "работает") {
+
+               if (node.statement === "работает") {
                     workingCount++
                }
           });
      });
      let notWorkingCount = 48 - workingCount
-     console.log(workingCount, notWorkingCount)
      return (
           <div>
                <div className={s.rackNumber}>

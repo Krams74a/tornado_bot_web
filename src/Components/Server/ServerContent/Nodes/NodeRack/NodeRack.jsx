@@ -1,13 +1,12 @@
 import Node from "./Node/Node";
 import s from "./NodeRack.module.css";
-import { v4 as uuidv4 } from 'uuid';
 
 const NodeRack = (props) => {
      return (
           <div className={s.nodeRack}>
-               {[...props.shelf].map(node => {
+               {[...props.shelf].map((node, index) => {
                return <Node 
-               key={node.id} 
+               key={index} 
                id={node.id} 
                state={node.statement} 
                mac={node.mac} 
