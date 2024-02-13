@@ -1,0 +1,28 @@
+.itemId {
+    width: 10%;
+}
+
+.itemState {
+    width: 20%;
+    height: auto;
+}
+
+.itemComment {
+    width: 30%;
+    height: auto;
+}
+
+.itemGuid {
+    width: 10%;
+    height: auto;
+}
+
+.itemMac {
+    width: 10%;
+    height: auto;
+}
+
+.itemIp {
+    width: 10%;
+    height: auto;
+}

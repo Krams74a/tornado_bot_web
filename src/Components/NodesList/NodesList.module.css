@@ -1,0 +1,30 @@
+.listTitle {
+    background-color: #424242;
+    margin-bottom: 10px;
+    padding: 10px;
+
+    width: 90%;
+
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.itemState {
+    margin-left: 110px;
+}
+
+.itemComment {
+    margin-left: 25px;
+}
+
+.itemGuid {
+    margin-left: 60px;
+}
+
+.itemMac {
+    margin-left: 120px;
+}
+
+.itemIp {
+    margin-left: 120px;
+}

@@ -1,0 +1,49 @@
+.servers {
+     display: flex;
+}
+
+.server {
+     display: flex;
+     flex-wrap: wrap;
+     
+}
+
+.legend {
+     background-color: #424242;
+     width: max-content;
+     height: 100%;
+
+     border-radius: 10px;
+
+     padding: 10px;
+
+     border: 2px solid #c7cdd3;
+     color: white;
+     margin-left: 10px;
+}
+
+.legend span {
+     margin-right: 20px;
+}
+
+.logsPage {
+     background-color: #424242;
+
+     border-radius: 10px;
+
+     width: 300px;
+     height: min-content;
+
+     padding: 10px;
+
+     margin-left: 20px;
+}
+
+.bottomInfo {
+     display: flex;
+
+}
+
+.updateInfo {
+     margin-left: 10px;
+}

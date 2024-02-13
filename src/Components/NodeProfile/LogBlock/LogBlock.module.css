@@ -1,0 +1,13 @@
+.logBlock {
+    background-color: #424242;
+    width: max-content;
+    height: max-content;
+
+    margin: 5px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+    padding: 10px;
+
+    border-radius: 10px;
+    border: 2px solid #c7cdd3;
+}
