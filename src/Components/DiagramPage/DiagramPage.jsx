@@ -6,17 +6,14 @@ const DiagramPage = (props) => {
     let data = props.nodesList
     let newData = []
     data.forEach(node => {
-        let newNode = {}
         newData.push(node.statement)
     });
     let statements = []
     newData.forEach(node => {
-        if (statements.includes(node) == false) {
+        if (statements.includes(node) === false) {
             statements.push(node)
         }
     });
-    console.log(newData)
-    console.log(statements)
 
     let diagramData = [
         
@@ -25,7 +22,7 @@ const DiagramPage = (props) => {
     statements.forEach(statement => {
         let elementToCount = statement; 
 
-        let count = newData.filter(x => x == elementToCount).length
+        let count = newData.filter(x => x === elementToCount).length
         diagramData.push([elementToCount, count])
     });
     
