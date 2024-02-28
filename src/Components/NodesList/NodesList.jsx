@@ -1,34 +1,7 @@
 import ListItem from "./ListItem/ListItem"
 import { connect } from "react-redux"
 import Table from 'react-bootstrap/Table';
-
-/*const NodesList = (props) => {
-    return (
-        <div>
-            <div className={s.listTitle}>
-                <div className={`${s.itemId} ${s.listTitleItemData}`}>
-                    <b>nodeInfo</b>
-                </div>
-                <div className={`${s.itemState} ${s.listTitleItemData}`}>
-                    <u><b>Состояние</b></u>
-                </div>
-                <div className={`${s.itemComment} ${s.listTitleItemData}`}>
-                    Комментарий
-                </div>
-                <div className={`${s.itemGuid} ${s.listTitleItemData}`}>
-                    <i>GUID </i>
-                </div>
-                <div className={`${s.itemMac} ${s.listTitleItemData}`}>
-                    <i> MAC </i>
-                </div>
-                <div className={`${s.itemIp} ${s.listTitleItemData}`}>
-                    <i>IP </i>
-                </div>
-            </div>
-            
-        </div>
-    )
-}*/
+import { compose } from "redux";
 
 const NodesList = (props) => {
     return (
@@ -44,8 +17,16 @@ const NodesList = (props) => {
                 </tr>
             </thead>
             <tbody>
-                {[...props.nodesList.reverse()].map((list_item) => {
-                    return <ListItem {...list_item}></ListItem>
+                {[...props.nodesList.reverse()].map((node, index) => {
+                    return <ListItem key={index} id={node.id} 
+                    state={node.statement} 
+                    mac={node.mac} 
+                    ip={node.ip} 
+                    guid={node.guid} 
+                    who={node.who}
+                    rack={node.rack}
+                    shelf={node.shelf}
+                    position={node.position}></ListItem>
                 })}
             </tbody>
         </Table>
@@ -54,10 +35,11 @@ const NodesList = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        nodesList: state.nodes.nodesList
+        nodesList: state.nodes.nodesList,
+        isAuth: state.auth.isAuth
     }
 }
 
-const NodesListConatiner = connect(mapStateToProps, {})(NodesList)
+const NodesListConatiner = compose(connect(mapStateToProps, {}))(NodesList)
 
 export default NodesListConatiner

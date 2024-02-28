@@ -1,16 +1,16 @@
 import s from "./LogBlock.module.css"
 
-const LogBlock = (props) => {
+const LogBlock = ({date, worker, log}) => {
     return (
         <div className={s.logBlock}>
             <div className={s.date}>
-                <i>{props.date}</i>
+                <i>{date}</i>
             </div>
             <div className={s.worker}>
-                <i>{props.worker}</i>
+                <i>{worker}</i>
             </div>
             <div className={s.log}>
-                <b>{props.log}</b>
+                <b>{log}</b>
             </div>
         </div>
     )

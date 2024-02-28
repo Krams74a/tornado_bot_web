@@ -1,10 +1,16 @@
 import { nodesAPI } from "../api/api"
+import { initializeApp } from "./app-reducer"
 
 const SET_NODES = "nodes/SET_NODES"
 const SET_CURRENT_NODE = "nodes/SET_CURRENT_NODE"
+const UPDATE_CURRENT_NODE = "nodes/UPDATE_CURRENT_NODE"
 const SET_CURRENT_NODE_LOGS = "nodes/SET_CURRENT_NODE_LOGS"
 const SET_NODES_LIST = "nodes/SET_NODES_LIST"
 const SET_LAST_LOGS = "nodes/SET_LAST_LOGS"
+const SET_EDIT_MODE = "nodes/SET_EDIT_MODE"
+const SET_ADD_SELECTED_NODE = "nodes/SET_ADD_SELECTED_NODE"
+const DELETE_SELECTED_NODE = "nodes/DELETE_SELECTED_NODE"
+const CLEAR_SELECTED_NODES = "nodes/CLEAR_SELECTED_NODES"
 
 let initialState = {
     racks: [
@@ -94,7 +100,9 @@ let initialState = {
     currentNode: {},
     currentNodeLogs: [],
     nodesList: [],
-    logsInfo: []
+    logsInfo: [],
+    editMode: false,
+    editModeSelectedNodes: []
 }
 
 //{guid:"002590ffff283855",id:"node480",ip:"10.4.2.68\n",mac:"0025902d13f8",position:"6",rack:"7",shelf:"8",statement:"работает",who:null}
@@ -108,6 +116,11 @@ export const nodesReducer = (state = initialState, action) => {
                 racks: [...action.racks]
             }
         case SET_CURRENT_NODE:
+            return {
+                ...state,
+                currentNode: action.currentNode
+            }
+        case UPDATE_CURRENT_NODE:
             return {
                 ...state,
                 currentNode: action.currentNode
@@ -127,6 +140,27 @@ export const nodesReducer = (state = initialState, action) => {
                 ...state,
                 logsInfo: [...action.logsInfo]
             }
+        case SET_EDIT_MODE:
+            return {
+                ...state,
+                editMode: action.editMode
+            }
+        case SET_ADD_SELECTED_NODE:
+            return {
+                ...state,
+                editModeSelectedNodes: [...state.editModeSelectedNodes, action.node],
+            }
+        case DELETE_SELECTED_NODE:
+            console.log(action)
+            return {
+                ...state,
+                editModeSelectedNodes: state.editModeSelectedNodes.filter(node => node.id !== action.nodeId)
+            }
+        case CLEAR_SELECTED_NODES:
+            return {
+                ...state,
+                editModeSelectedNodes: []
+            }
         default:
             return state
     }
@@ -137,6 +171,10 @@ export const setCurrentNode = (currentNode) => ({ type: SET_CURRENT_NODE, curren
 export const setCurrentNodeLogs = (currentNodeLogs) => ({ type: SET_CURRENT_NODE_LOGS, currentNodeLogs })
 export const setNodesList = (nodesList) => ({ type: SET_NODES_LIST, nodesList })
 export const setLastLogs = (logsInfo) => ({ type: SET_LAST_LOGS, logsInfo })
+export const setEditMode = (editMode) => ({ type: SET_EDIT_MODE, editMode })
+export const addSelectedNode = (node) => ({ type: SET_ADD_SELECTED_NODE, node })
+export const deleteSelectedNode = (nodeId) => ({ type: DELETE_SELECTED_NODE, nodeId })
+export const clearSelectedNodes = () => ({ type: CLEAR_SELECTED_NODES })
 
 export const getNode = (nodeId) => async (dispatch) => {
     let data = await nodesAPI.getNode(nodeId)
@@ -152,124 +190,188 @@ export const getNodeLogs = (nodeId) => async (dispatch) => {
 
 export const getNodes = () => async (dispatch) => {
     let data = await nodesAPI.getNodes()
-    data = data.data.reverse()
-    let newData = []
-    newData = data.filter(function (node) {
-        return node.id.includes("node");
-    });
-    newData = newData.filter(function (node) {
-        let nodeName = parseInt(node.id.slice(4))
-        if ((nodeName < 337) || (nodeName > 384)) {
-            nodeName = nodeName.toString()
-            if (nodeName.lenght === 1) {
-                nodeName = "00" + nodeName
+    if (data.message === "success") {
+        data = data.data.reverse()
+        let newData = []
+        newData = data.filter(function (node) {
+            return node.id.includes("node");
+        });
+        newData = newData.filter(function (node) {
+            let nodeName = parseInt(node.id.slice(4))
+            if ((nodeName < 337) || (nodeName > 384)) {
+                nodeName = nodeName.toString()
+                if (nodeName.lenght === 1) {
+                    nodeName = "00" + nodeName
+                }
+                if (nodeName.lenght === 2) {
+                    nodeName = "0" + nodeName
+                }
+                return nodeName
             }
-            if (nodeName.lenght === 2) {
-                nodeName = "0" + nodeName
-            }
-            return nodeName
-        }
-        return 0
-    });
-    dispatch(setNodesList(newData))
-    let racks = [
-        [
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}]
-        ], [
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}]
-        ], [
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}]
-        ], [
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}]
-        ], [
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}]
-        ], [
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}]
-        ], [
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}]
-        ], [
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}]
-        ], [
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}],
-            [{}, {}, {}, {}, {}, {}]
+            return 0
+        });
+        dispatch(setNodesList(newData))
+        let racks = [
+            [
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}]
+            ], [
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}]
+            ], [
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}]
+            ], [
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}]
+            ], [
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}]
+            ], [
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}]
+            ], [
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}]
+            ], [
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}]
+            ], [
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}],
+                [{}, {}, {}, {}, {}, {}]
+            ]
         ]
-    ]
+    
+        newData.forEach(node => {
+            let node_rack = node.rack - 1
+            let node_shelf = node.shelf - 1
+            let node_position = node.position - 1
+            racks[node_rack][node_shelf][node_position] = node
+        });
+        dispatch(setNodes(racks))
+        return true
+    }
+    else {
+        return false
+    }
+    
+}
 
-    newData.forEach(node => {
-        let node_rack = node.rack - 1
-        let node_shelf = node.shelf - 1
-        let node_position = node.position - 1
-        racks[node_rack][node_shelf][node_position] = node
-    });
-    dispatch(setNodes(racks))
+export const getNodeProfile = (nodeId) => async (dispatch) => {
+    dispatch(getNode(nodeId))
+    dispatch(getNodeLogs(nodeId))
 }
 
 export const getLastLogs = () => async (dispatch) => {
     let data = await nodesAPI.getLastLogs()
     let logsInfo = data.data;
     dispatch(setLastLogs(logsInfo))
+}
+
+export const addLog = (newLog) => async (dispatch) => {
+    let data = await nodesAPI.addLog(newLog)
+    if (data.message === "success") {
+        dispatch(getNodeLogs(newLog.id))
+        return true
+    } else {
+        return false
+    }
+}
+
+export const updateNodeState = (currentNode, loggedUserInfo, newState) => async (dispatch) => {
+    console.log(currentNode, loggedUserInfo, newState)
+    let data = await nodesAPI.updateNodeState(currentNode.id, newState)
+    if (data.message === "success") {
+        let date = new Date().toString();
+        date = date.split(" ")
+        date.length = 5
+        const halfBeforeTheUnwantedElement = date.slice(0, 3)
+        const halfAfterTheUnwantedElement = date.slice(4)
+        date = halfBeforeTheUnwantedElement.concat(halfAfterTheUnwantedElement)
+        let year = new Date().getFullYear().toString()
+        date.push(year)
+        date = date.join(" ")
+
+        const newLog = {
+            id: currentNode.id,
+            mac: currentNode.mac,
+            worker: loggedUserInfo.lastName + " " + loggedUserInfo.firstName,
+            date: date,
+            log: `Состояние узла было изменено на ${newState}`
+        }
+        dispatch(addLog(newLog))
+        dispatch(getNode(currentNode.id))
+        dispatch(getNodes())
+        return true
+    } else {
+        return false
+    }
+}
+
+export const addLogs = (nodesList, newLog) => async (dispatch) => {
+    let data = await nodesAPI.addLogs(nodesList, newLog)
+    if (data.message === "success") {
+        dispatch(clearSelectedNodes())
+        dispatch(initializeApp())
+        return true
+    }
+    else {
+        return false
+    }
 }
 
 export default nodesReducer;

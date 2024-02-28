@@ -1,5 +1,5 @@
 .diagramPage {
-    background-color: #222222;
+    background-color: var(--color-background);
     margin: 0;
 
 }

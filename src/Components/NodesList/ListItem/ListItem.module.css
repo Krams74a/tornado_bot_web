@@ -1,3 +1,7 @@
+.listItem {
+    cursor: pointer;
+}
+
 .itemId {
     width: 10%;
 }

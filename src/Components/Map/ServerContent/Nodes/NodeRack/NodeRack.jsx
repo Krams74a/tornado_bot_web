@@ -16,6 +16,9 @@ const NodeRack = (props) => {
                rack={node.rack}
                shelf={node.shelf}
                position={node.position}
+               editMode={props.editMode}
+               addSelectedNode={props.addSelectedNode}
+               deleteSelectedNode={props.deleteSelectedNode}
               ></Node>
           })}
           </div>

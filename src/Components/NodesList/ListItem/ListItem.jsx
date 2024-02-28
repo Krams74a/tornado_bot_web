@@ -1,10 +1,10 @@
 import s from "./ListItem.module.css"
+import {useNavigate} from "react-router-dom"
 
-const ListItem = (props) => {
-    console.log(props)
-
+const ListItem = ({id, state, guid, mac, ip, who, rack, shelf, position}) => {
+    const navigate = useNavigate()
     let emoji = ""
-    switch (props.statement) {
+    switch (state) {
         case "умер":
             emoji = "🔴"
             break;
@@ -20,29 +20,32 @@ const ListItem = (props) => {
         case "ожидает ремонта":
             emoji = "🟠"
             break;
+        case "готов к установке":
+            emoji = "🟣"
+            break;
         default:
             break;
     }
 
     return (
-        <tr className={s.listItem}>
+        <tr className={s.listItem} onClick={() => navigate(`/node/${id}`)}>
                 <td className={`${s.itemId} ${s.listItemData}`}>
-                    <b>{emoji + props.id}</b>{` (${props.rack}.${props.shelf}.${props.position})`}
+                    <b>{emoji + id}</b>{` (${rack}.${shelf}.${position})`}
                 </td>
                 <td className={`${s.itemState} ${s.listItemData}`}>
-                    <u><b>{props.statement || "--------"}</b></u>
+                    <u><b>{state || "--------"}</b></u>
                 </td>
                 <td className={`${s.itemComment} ${s.listItemData}`}>
-                    {props.who || "--------"}
+                    {who || "--------"}
                 </td>
                 <td className={`${s.itemGuid} ${s.listItemData}`}>
-                    <i>{props.guid || "--------"}</i>
+                    <i>{guid || "--------"}</i>
                 </td>
                 <td className={`${s.itemMac} ${s.listItemData}`}>
-                    <i>{props.mac || "--------"}</i>
+                    <i>{mac || "--------"}</i>
                 </td>
                 <td className={`${s.itemIp} ${s.listItemData}`}>
-                    <i>{props.ip || "--------"}</i>
+                    <i>{ip || "--------"}</i>
                 </td>
         </tr>
     )

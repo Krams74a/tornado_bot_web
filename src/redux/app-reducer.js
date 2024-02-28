@@ -1,3 +1,4 @@
+import { isAuth } from "./auth-reducer"
 import { getLastLogs, getNodes } from "./nodes-reducer"
 
 const INITIALIZED_SUCCESS = "app-reducer/INITIALIZED_SUCCESS"
@@ -24,11 +25,24 @@ export const appReducer = (state = initialState, action) => {
 export const initializingSuccess = () => ({type: INITIALIZED_SUCCESS})
 
 export const initializeApp = () => (dispatch) => {
-    dispatch(getNodes())
-    let logsPromise = dispatch(getLastLogs())
-    logsPromise.then(() => {
-        dispatch(initializingSuccess())
-    })
+    try {
+        let promise = dispatch(isAuth())
+        promise.then(() => {
+            let isSuccess =  dispatch(getNodes())
+            if (isSuccess) {
+                dispatch(getLastLogs())
+                dispatch(initializingSuccess())
+                return true
+            }
+            else {
+                return false
+            }
+        })
+    } 
+    catch {
+        return false
+    }
+    
 }
 
 export default appReducer;

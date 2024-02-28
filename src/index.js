@@ -4,13 +4,16 @@ import './index.css';
 import AppContainer from "./Components/App/App"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import store from "./redux/store-redux"
-import {Provider} from "react-redux";
+import { Provider } from "react-redux";
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 document.body.style = 'background: #222222'
 document.title = "Леночка"
 root.render(
     <Provider store={store}>
-        <AppContainer />
+        <BrowserRouter>
+            <AppContainer />
+        </BrowserRouter>
     </Provider>
 );

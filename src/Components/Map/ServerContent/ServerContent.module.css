@@ -1,5 +1,5 @@
 .serverContent {
-     background-color: #575757;
+     background-color: var(--color-container);
      border-radius: 10px;
 
      height: 300px;
@@ -19,6 +19,11 @@
      display: flex;
 }
 
+.counter {
+     margin-left: 25%;
+     display: flex;
+}
+
 .workingCount {
-     margin-left: 30%;
+     margin-right: 10px;
 }

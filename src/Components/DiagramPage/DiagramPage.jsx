@@ -1,6 +1,7 @@
 import s from "./DiagramPage.module.css"
 import { connect } from "react-redux"
 import { Chart } from "react-google-charts";
+import { compose } from "redux";
 
 const DiagramPage = (props) => {
     let data = props.nodesList
@@ -29,8 +30,6 @@ const DiagramPage = (props) => {
 
     diagramData.unshift(["Состояние", "Количество"])
 
-    console.log(diagramData)
-
     const options = {
         title: "Узлы Торнадо",
         pieHole: 0.2,
@@ -38,9 +37,7 @@ const DiagramPage = (props) => {
         height: 700,
         width: 1600,
         backgroundColor: {
-            fill: "#424242",
-            stroke: "black",
-            strokeWidth: 2
+            fill: "#222222"
         },
         legend: {
             textStyle: {color: "white"}
@@ -66,10 +63,11 @@ const DiagramPage = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        nodesList: state.nodes.nodesList
+        nodesList: state.nodes.nodesList,
+        isAuth: state.auth.isAuth
     }
 }
 
-const DiagramPageContainer = connect(mapStateToProps, {})(DiagramPage)
+const DiagramPageContainer = compose(connect(mapStateToProps, {}))(DiagramPage)
 
 export default DiagramPageContainer
