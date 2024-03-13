@@ -43,10 +43,12 @@ const NodesList = ({nodesList, updateNode, isAuth, loggedUserInfo, showToastMess
         if (searchFilter === "") {
             filteredNodesList = nodesList.filter((node) => statementFilter !== "" ? node.statement === statementFilter : node)
         } else {
-            let nodesList = refactorNodesFromSearch()
-            filteredNodesList = nodesList.filter((node) => statementFilter !== "" 
-            ? node.statement === statementFilter && (nodesList.includes(node.id.replace("node", "")))
-            : node && (nodesList.includes(node.id.replace("node", ""))))
+            let nodesIdsList = refactorNodesFromSearch()
+
+            filteredNodesList = nodesList.filter((node) => 
+            statementFilter !== "" 
+            ? node.statement === statementFilter && (nodesIdsList.includes(node.id.replace("node", "")))
+            : node && (nodesIdsList.includes(node.id.replace("node", ""))))
         }
         let outputNodesList = []
         if (directionFilter === "reverse") {
@@ -93,7 +95,7 @@ const NodesList = ({nodesList, updateNode, isAuth, loggedUserInfo, showToastMess
         }
         return outputNodesList
     }
-    if (nodesList.length === 0) {
+    if (!nodesList) {
         return (
             <div>
                 Loading

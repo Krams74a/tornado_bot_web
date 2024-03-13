@@ -46,6 +46,7 @@ const NodeProfile = ({ showToastMessage, currentNode, currentNodeLogs, getNodePr
                 break;
         }
     }
+    console.log(currentNode)
     if (!currentNode) return <div>Loading...</div>
     return (
         <div className={s.nodePage}>
