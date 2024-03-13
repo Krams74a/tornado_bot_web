@@ -65,6 +65,7 @@ export const isAuth = () => async (dispatch) => {
     } else {
         dispatch(setLoggedUserData({username:"", firstName:"", lastName: "", telegramId: 0, role: ""}))
         dispatch(setIsAuth(false))
+        return 0
     }
 }
 
