@@ -349,6 +349,7 @@ export const getNodes = () => async (dispatch) => {
 }
 
 export const getNodeProfile = (nodeId) => async (dispatch) => {
+    console.log(nodeId)
     dispatch(getNode(nodeId))
     dispatch(getNodeLogs(nodeId))
 }
