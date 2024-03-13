@@ -100,9 +100,7 @@ let initialState = {
             [{}, {}, {}, {}, {}, {}]
         ]
     ], 
-    currentNode: {},
     currentNodeLogs: [],
-    nodesList: [],
     logsInfo: [],
     editMode: false,
     editModeSelectedNodes: []
