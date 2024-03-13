@@ -1,0 +1,9 @@
+.servers {
+     display: flex;
+}
+
+.server {
+     display: flex;
+     flex-wrap: wrap;
+     
+}

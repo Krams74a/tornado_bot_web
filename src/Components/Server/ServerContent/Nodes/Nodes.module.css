@@ -1,8 +1,0 @@
-.nodes {
-     grid-area: "nodes";
- 
-     margin: 5px;
- 
-     display: flex;
-     flex-direction: column;
-}

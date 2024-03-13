@@ -1,0 +1,49 @@
+.node {
+   height: 100%;
+   width: 100%;
+
+   margin: 1px;
+
+   text-align: center;
+   vertical-align: baseline;
+
+   border-radius: 5px;
+
+   color: var(--color-text-black);
+   cursor: pointer;
+}
+
+.nodeHover {
+   border: 2px solid var(--color-highlight);
+   transition: 200ms linear 10ms;
+   outline-offset: 0px;
+}
+
+.dead {
+   background-color: var(--color-node-dead);
+   color: white;
+}
+
+.working {
+   background-color: var(--color-node-working);
+}
+
+.need_repair {
+   background-color: var(--color-node-needRepair);
+}
+
+.need_return {
+   background-color: var(--color-node-needReturn);
+}
+
+.ready_to_set {
+   background-color: var(--color-node-readyToSet);
+}
+
+.waiting_repair {
+   background-color:var(--color-node-waitingRepair);
+}
+
+.highlight {
+   border: 2px solid var(--color-highlight);
+}

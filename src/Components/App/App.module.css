@@ -1,5 +1,5 @@
 body {
-     background-color: #222222;
+     background-color: var(--color-background);
  }
  
  .app {
@@ -10,7 +10,7 @@ body {
      width: 100%;
      height: 100%;
 
-     background-color: #222222;
+     background-color: var(--color-background);
  }
  
  .header {
@@ -19,13 +19,14 @@ body {
 
  .content {
      grid-area: c;
-     background-color: #222222;
+     background-color: var(--color-background);
      color: white;
-     width: auto;
+     width: 100%;
      height: auto;
     
      padding-left: 20px;
-     padding-top: 80px;
+     padding-top: 70px;
+     padding-bottom: 20px;
  }
 
 

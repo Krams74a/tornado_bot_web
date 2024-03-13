@@ -1,5 +1,6 @@
 .itemId {
     width: 10%;
+    cursor: pointer;
 }
 
 .itemState {
@@ -8,7 +9,7 @@
 }
 
 .itemComment {
-    width: 30%;
+    width: 20%;
     height: auto;
 }
 

@@ -6,5 +6,23 @@
 
 body {
      margin: 0;
+     background-color: #1d1d1d;
+}
 
+html {
+     --color-text-white: white;
+     --color-text-black: black;
+     --color-background: #1d1d1d;
+     --color-container: #424242;
+     --color-container-border: #616161;
+
+     --color-node-dead: #E81224;
+     --color-node-working: #16C60C;
+     --color-node-needRepair: #FFF100;
+     --color-node-needReturn: #0078D7;
+     --color-node-readyToSet: #886CE4;
+     --color-node-waitingRepair: #F7630C;
+
+     --color-highlight: #f0f8ff;
+     --color-button-hover: #004ca8;
 }
