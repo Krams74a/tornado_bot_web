@@ -10,7 +10,7 @@ import ListBlock from "../MyLists/ListBlock";
 import { v4 as uuidv4 } from 'uuid';
 import { setSelectedNodes, setEditMode, getNodes } from "../../redux/nodes-reducer";
 
-const EditList = ({ getListByName, worker, currentList, setSelectedNodes, setEditMode, getNodes, editModeSelectedNodes }) => {
+/*const EditList = ({ getListByName, worker, currentList, setSelectedNodes, setEditMode, getNodes, editModeSelectedNodes }) => {
     
     const location = useLocation();
     const listName = decodeURI(location.pathname.split("/")[2]);
@@ -76,6 +76,14 @@ const EditList = ({ getListByName, worker, currentList, setSelectedNodes, setEdi
                     <MapContainer editListMode={editListMode} type="small" />
                 </div>}
         </div>
+    )
+}*/
+
+const EditList = () => {
+    return (
+    <Alert variant="warning" style={{width: "30%"}}>
+        {"Этот функционал еще не добавлен((("}
+    </Alert>
     )
 }
 
