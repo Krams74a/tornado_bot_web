@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import { Button, Row } from "react-bootstrap";
 import { useState } from "react";
 import * as Yup from "yup"
-
+import { Link } from "react-router-dom";
 
 const AddLogs = (props) => {
     const [error, setError] = useState("")
@@ -46,7 +46,9 @@ const AddLogs = (props) => {
             setError("Ошибка")
         }
     }
-
+    if (!props.isAuth) return <div>
+        Чтобы добавить логи необходимо <Link to="/login">войти</Link>.
+    </div>
     return (
         <Formik initialValues={{ log: '', }}
             validationSchema={SignupSchema}

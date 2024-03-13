@@ -1,4 +1,5 @@
 import s from "./App.module.css"
+import { v4 as uuidv4 } from 'uuid';
 import { connect } from "react-redux";
 import React from "react"
 import { initializeApp } from "../../redux/app-reducer"
@@ -13,6 +14,10 @@ import MapContainer from "../Map/Map";
 import EditSelectedNodesPageContainer from "../EditSelectedNodesPage/EditSelectedNodesPage";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import MyListsContainer from "../MyLists/MyLists";
+import { getLists } from "../../redux/lists-reducer";
+import ListsContainer from "../Lists/Lists";
+import EditListContainer from "../EditList/EditList";
 
 class App extends React.Component {
      componentDidMount() {
@@ -39,21 +44,24 @@ class App extends React.Component {
      }
 
      render() {
-          if (!this.props.initialized) return <div style={{ color: "white" }}>Loading...</div>
+          if (!this.props.initialized && this.props.userLists) return <div style={{ color: "white" }}>Loading...</div>
           return (
                <div className={s.app}>
                     <HeaderContainer />
-                    <ToastContainer />
-
+                    
                     <div className={s.content}>
+                    <ToastContainer />
                          <Routes>
                               <Route path="" element={<MapContainer />} />
-                              <Route path="list" element={<NodesListContainer />} />
+                              <Route path="list" element={<NodesListContainer showToastMessage={this.showToastMessage} />} />
                               <Route path="map" element={<MapContainer showToastMessage={this.showToastMessage} />} />
                               <Route path="diagram" element={<DiagramPageContainer />} />
                               <Route path="node/:id" element={<NodeProfileContainer showToastMessage={this.showToastMessage} />} />
                               <Route path="login" element={<LoginContainer />} />
                               <Route path="editPage" element={<EditSelectedNodesPageContainer showToastMessage={this.showToastMessage} />} />
+                              <Route path="myLists" element={<MyListsContainer showToastMessage={this.showToastMessage}/>} />
+                              <Route path="lists" element={<ListsContainer showToastMessage={this.showToastMessage}/>} />
+                              <Route path="editList/:name" element={<EditListContainer showToastMessage={this.showToastMessage}/>} />
                               <Route path="*" element={<Navigate replace to="/map" />} />
                          </Routes>
                     </div>
@@ -66,11 +74,13 @@ const mapStateToProps = (state) => {
      return {
           initialized: state.app.initialized,
           isAuth: state.auth.isAuth,
-          logsInfo: state.nodes.logsInfo
+          logsInfo: state.nodes.logsInfo,
+          userLists: state.lists.userLists,
+          username: state.auth.loggedUserInfo.username
      }
 }
 
-const AppContainer = connect(mapStateToProps, { initializeApp, login })(App)
+const AppContainer = connect(mapStateToProps, { initializeApp, login, getLists })(App)
 
 
 export default AppContainer;

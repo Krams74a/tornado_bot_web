@@ -37,7 +37,7 @@ const DiagramPage = (props) => {
         height: 700,
         width: 1600,
         backgroundColor: {
-            fill: "#222222"
+            fill: "#1d1d1d"
         },
         legend: {
             textStyle: {color: "white"}

@@ -1,0 +1,30 @@
+
+.legend {
+    background-color: var(--color-container);
+    width: max-content;
+    height: 100%;
+
+    border-radius: 10px;
+
+    padding: 10px;
+
+    border: 2px solid var(--color-container-border);
+    color: var(--color-text-white);
+    margin-left: 10px;
+}
+
+.legend span {
+    margin-right: 20px;
+}
+
+.bottomInfo {
+    display: flex;
+}
+
+.buttons {
+    display: flex;
+    height: 49px;
+    gap: 1%;
+    margin-bottom: 1%;
+    padding-left: 1%;
+}

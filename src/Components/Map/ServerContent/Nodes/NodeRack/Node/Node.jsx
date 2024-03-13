@@ -5,7 +5,7 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { useState } from "react";
 
-const Node = ({ id, state, guid, mac, ip, who, rack, shelf, position, editMode, addSelectedNode, deleteSelectedNode }) => {
+const Node = ({ id, statement, guid, mac, ip, who, rack, shelf, position, editMode, addSelectedNode, deleteSelectedNode }) => {
      const navigate = useNavigate();
      const [isHighlight, setIsHighlight] = useState(false)
 
@@ -17,7 +17,7 @@ const Node = ({ id, state, guid, mac, ip, who, rack, shelf, position, editMode, 
                }
                else {
                     setIsHighlight(true)
-                    addSelectedNode({ id, state, guid, mac, ip, who, rack, shelf, position })
+                    addSelectedNode({ id, statement, guid, mac, ip, who, rack, shelf, position })
                }
                
           } else {
@@ -71,18 +71,18 @@ const Node = ({ id, state, guid, mac, ip, who, rack, shelf, position, editMode, 
 
      let nodeName = id ? id.slice(4) : ""
 
-     const dead = state === "умер" ? s.dead : ""
-     const working = state === "работает" ? s.working : ""
-     const need_repair = state === "нужно обслужить" ? s.need_repair : ""
-     const need_return = state === "ожидает возврата" ? s.need_return : ""
-     const ready_to_set = state === "готов к установке" ? s.ready_to_set : ""
-     const waiting_repair = state === "ожидает ремонта" ? s.waiting_repair : ""
+     const dead = statement === "умер" ? s.dead : ""
+     const working = statement === "работает" ? s.working : ""
+     const need_repair = statement === "нужно обслужить" ? s.need_repair : ""
+     const need_return = statement === "ожидает возврата" ? s.need_return : ""
+     const ready_to_set = statement === "готов к установке" ? s.ready_to_set : ""
+     const waiting_repair = statement === "ожидает ремонта" ? s.waiting_repair : ""
      const is_highlight = isHighlight ? s.highlight : ""
 
      return (
           <Tippy content={<div className={s.tooltip}>
                <div><b>{`${nodeName} (${rack}.${shelf}.${position})`}</b></div>
-               <div><u>{state}</u></div>
+               <div><u>{statement}</u></div>
                <div>{who}</div>
           </div>}>
                <div

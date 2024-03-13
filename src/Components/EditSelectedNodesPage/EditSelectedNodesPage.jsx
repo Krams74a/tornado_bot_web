@@ -2,11 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { Button, Table } from "react-bootstrap";
 import ListItem from "../NodesList/ListItem/ListItem";
-import { addLogs } from "../../redux/nodes-reducer";
+import { addLogs, updateNode } from "../../redux/nodes-reducer";
 import AddLogs from "../NodeProfile/AddLog/AddLogs";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Modal } from "react-bootstrap";
+import SaveListContainer from "../SaveList/SaveList";
 
 const EditSelectedNodesPage = (props) => {
     const navigate = useNavigate();
@@ -15,10 +16,19 @@ const EditSelectedNodesPage = (props) => {
     const handleCloseInfo = () => setShowInfo(false);
     const handleShowInfo = () => setShowInfo(true);
 
+    const [showSave, setShowSave] = useState(false);
+    const handleCloseSave = () => setShowSave(false);
+    const handleOpenSave = () => setShowSave(true);
+
     if (props.editModeSelectedNodes.length > 0) {
         return (
             <div>
-                <Button onClick={handleShowInfo} style={{ marginBottom: "10px" }}>Добавить лог</Button>
+                <SaveListContainer showToastMessage={props.showToastMessage} showInfo={showSave} handleShowInfo={handleOpenSave} handleCloseInfo={handleCloseSave}/>
+                <div style={{display: "flex", gap: "20px", marginBottom: "10px"}}>
+                    <Button onClick={() => navigate(-1)}>Назад</Button>
+                    <Button onClick={handleShowInfo}>Добавить логи</Button>
+                    <Button variant="success" onClick={handleOpenSave}>Сохранить как список</Button>
+                </div>
                 <Table bordered hover variant="dark" responsive style={{ width: "95%" }}>
                     <thead>
                         <tr>
@@ -28,19 +38,28 @@ const EditSelectedNodesPage = (props) => {
                             <th>GUID</th>
                             <th>MAC</th>
                             <th>IP</th>
+                            <th>Кнопки</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {[...props.editModeSelectedNodes.reverse()].map((node, index) => {
-                            return <ListItem key={index} id={node.id}
-                                state={node.state}
+                        {[...props.editModeSelectedNodes].map((node, index) => {
+                            return <ListItem 
+                                key={index} 
+                                id={node.id}
+                                statement={node.statement}
                                 mac={node.mac}
                                 ip={node.ip}
                                 guid={node.guid}
                                 who={node.who}
                                 rack={node.rack}
                                 shelf={node.shelf}
-                                position={node.position}></ListItem>
+                                position={node.position}
+                                updateNode={props.updateNode}
+                                loggedUserInfo={props.loggedUserInfo}
+                                type="selectedList"
+                                showToastMessage={props.showToastMessage}
+                                isAuth={props.isAuth}
+                                ></ListItem>
                         })}
                     </tbody>
                 </Table>
@@ -68,6 +87,6 @@ const mapStateToProps = (state) => {
     }
 }
 
-const EditSelectedNodesPageContainer = connect(mapStateToProps, { addLogs })(EditSelectedNodesPage)
+const EditSelectedNodesPageContainer = connect(mapStateToProps, { addLogs, updateNode })(EditSelectedNodesPage)
 
 export default EditSelectedNodesPageContainer

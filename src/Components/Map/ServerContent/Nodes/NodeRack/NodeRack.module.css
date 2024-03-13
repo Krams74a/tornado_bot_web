@@ -1,8 +1,8 @@
 .nodeRack {
      height: 100%;
- 
+
      margin: 1px;
- 
+      width: 100%;
      display: flex;
      flex-direction: row;
   }

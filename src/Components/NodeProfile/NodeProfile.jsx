@@ -1,32 +1,24 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom"
-import { getNode, getNodeLogs, addLog, updateNodeState, getNodeProfile } from "../../redux/nodes-reducer";
+import { addLog, updateNode, getNodeProfile } from "../../redux/nodes-reducer";
 import s from "./NodeProfile.module.css"
 import React from "react"
 import LogBlock from "./LogBlock/LogBlock";
 import { compose } from "redux";
 import AddLog from "./AddLog/AddLog";
 import { Button } from "react-bootstrap";
-import { Modal, Row } from "react-bootstrap";
-import { Formik, Field } from "formik";
-import * as Yup from "yup"
-import { useFormik } from "formik";
-import Form from "react-bootstrap/Form"
+import UpdateNode from "../UpdateNode/UpdateNode";
 
-const NodeProfile = ({ showToastMessage, currentNode, currentNodeLogs, getNodeProfile, loggedUserInfo, addLog, isAuth, updateNodeState }) => {
+const NodeProfile = ({ showToastMessage, currentNode, currentNodeLogs, getNodeProfile, loggedUserInfo, addLog, isAuth, updateNode }) => {
     const location = useLocation();
     const nodeId = location.pathname.split("/")[2];
-
+    console.log(currentNode)
     const navigate = useNavigate()
-    const [error, setError] = useState("")
-    const [success, setSuccess] = useState("")
 
     const [showInfo, setShowInfo] = useState(false);
     const handleCloseInfo = () => setShowInfo(false);
     const handleShowInfo = () => setShowInfo(true);
-
-    const [statement, setStatement] = useState("default")
 
     useEffect(() => {
         getNodeProfile(nodeId)
@@ -35,43 +27,6 @@ const NodeProfile = ({ showToastMessage, currentNode, currentNodeLogs, getNodePr
     const addNewLog = (newLog) => {
         addLog(newLog)
     }
-
-    const SignupSchema = Yup.object().shape({
-        statement: Yup.string()
-    })
-
-    const formik = useFormik({
-        validationSchema: SignupSchema,
-        enableReinitialize: true,
-        initialValues: {
-            statement: currentNode.statement,
-            mac: currentNode.mac,
-            guid: currentNode.guid
-        },
-        onSubmit: (values, { resetForm }) => {
-            console.log(values)
-            if (values.statement === "default") {
-                showToastMessage("error", "Выберите состояние")
-                resetForm({})
-            }
-            else if (values.statement === currentNode.statement) {
-                showToastMessage("error", `Невозможно заменить состояние узла на уже существующее ("${currentNode.statement}")`)
-            } else if (!values.statement) {
-                showToastMessage("error", "Ошибка")
-                resetForm({})
-            }
-             else {
-                let isSuccess = updateNodeState(currentNode, loggedUserInfo, values.statement)
-                if (isSuccess) {
-                    handleCloseInfo()
-                    showToastMessage("success", "Состояние обновлено")
-                    resetForm({})
-                } else {
-                    showToastMessage("error", "Ошибка")
-                }
-            }
-        }
-    })
 
     const getEmoji = () => {
         switch (currentNode.statement) {
@@ -95,45 +50,23 @@ const NodeProfile = ({ showToastMessage, currentNode, currentNodeLogs, getNodePr
     return (
         <div className={s.nodePage}>
             <div className={s.buttons}>
-                <Button onClick={() => { navigate("/map") }}>
+                <Button onClick={() => { navigate(-1) }}>
                     🡸 Назад
                 </Button>
                 <Button variant={"success"} onClick={handleShowInfo}>
-                    Обновить состояние
+                    Редактировать
                 </Button>
             </div>
-            <Modal show={showInfo} onHide={handleCloseInfo} data-bs-theme="dark" style={{ color: "white" }}>
-                <Modal.Header>
-                    <Modal.Title>{"Обновить состояние"}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form onSubmit={formik.handleSubmit}>
-                        <Form.Group controlId="mac" className="mb-3">
-                            <Form.Label>{`MAC`}</Form.Label>
-                            <Form.Control value={formik.values.mac} onChange={formik.handleChange} name="mac" type="text" placeholder="Mac" />
-                        </Form.Group>
-                        <Form.Group controlId="guid" className="mb-3">
-                            <Form.Label>{`GUID`}</Form.Label>
-                            <Form.Control value={formik.values.guid} onChange={formik.handleChange} name="guid" type="text" placeholder="Mac" />
-                        </Form.Group>
-                        <Form.Group controlId="statement" className="mb-3">
-                            <Form.Label>{`Текущее состояние: ${getEmoji()} ${currentNode.statement}`}</Form.Label>
-                            <Form.Select value={formik.values.statement} type="select" onChange={formik.handleChange} onBlur={formik.handleBlur} name="statement">
-                                <option value="default">Выберите новое состояние</option>
-                                <option value={"умер"}>🔴 Умер</option>
-                                <option value={"работает"}>🟢 Работает</option>
-                                <option value={"нужно обслужить"}>🟡 Нужно обслужить</option>
-                                <option value={"ожидает возврата"}>🔵 Ожидает возврата</option>
-                                <option value={"готов к установке"}>🟣 Готов к установке</option>
-                                <option value={"ожидает ремонта"}>🟠 Ожидает ремонта</option>
-                            </Form.Select>
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Button type="submit">Подтвердить</Button>
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-            </Modal>
+            <UpdateNode 
+            showInfo = {showInfo}
+            handleCloseInfo = {() => handleCloseInfo()}
+            currentNode = {currentNode}
+            loggedUserInfo = {loggedUserInfo}
+            showToastMessage = {showToastMessage}
+            updateNode = {updateNode}
+            getEmoji={() => getEmoji()} 
+            isAuth={isAuth}
+            />
             <div className={s.nodeHeader}>
                 <div className={s.nodeName}>
                     <b>{`${getEmoji()} ${currentNode.id}`}</b>{`   (${currentNode.rack}.${currentNode.shelf}.${currentNode.position}) - ${currentNode.statement}`}
@@ -146,7 +79,7 @@ const NodeProfile = ({ showToastMessage, currentNode, currentNodeLogs, getNodePr
                 <div><b>{`IP: `}</b>{`${currentNode.ip ? currentNode.ip : "---"}`}</div>
             </div>
             <div>
-                <AddLog isAuth={isAuth} addLog={addNewLog} {...currentNode} loggedUserInfo={loggedUserInfo} />
+                <AddLog buttonWidth="20%" showToastMessage={showToastMessage} isAuth={isAuth} addLog={addNewLog} {...currentNode} loggedUserInfo={loggedUserInfo} />
             </div>
             <div className={s.logsContainer}>
                 {[...currentNodeLogs].reverse().map((log, index) => {
@@ -166,7 +99,7 @@ const mapStateToProps = (state) => {
     }
 }
 
-const NodeProfileContainer = compose(connect(mapStateToProps, { getNodeProfile, addLog, updateNodeState }))(NodeProfile)
+const NodeProfileContainer = connect(mapStateToProps, { getNodeProfile, addLog, updateNode })(NodeProfile)
 
 
 

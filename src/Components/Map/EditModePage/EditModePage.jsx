@@ -28,10 +28,14 @@ const EditModePage = (props) => {
   return (
     <div className={s.editPage}>
       {
-        <Button variant={props.editMode ? "danger" : "primary"} onClick={() => { handleShowInfo() }}>
-          {props.editMode ? "Завершить" : "Редактировать"}
-        </Button>
-
+        <div style={{display: "flex", gap: "10px"}}>
+          {props.editMode && <Button variant={"danger"} onClick={() => { props.setEditMode(false) }}>
+            Отменить
+          </Button>}
+          <Button variant={props.editMode ? "success" : "primary"} onClick={() => { handleShowInfo() }}>
+            {props.editMode ? "Завершить" : "Редактировать"}
+          </Button>
+        </div>
       }
       {
         <div
@@ -43,7 +47,7 @@ const EditModePage = (props) => {
               <Modal.Title>{props.editMode ? "Завершить выделение узлов" : "Режим выделения"}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <div style={{wordWrap: "break-word"}}>
+              <div style={{ wordWrap: "break-word" }}>
                 {props.editMode ? `Вы выделили следующие узлы: ${props.editModeSelectedNodes.map(node => node.id.replace("node", ""))}` : "Вы вошли в режим выделения. Нажмите на нужные узлы."}
               </div></Modal.Body>
             <Modal.Footer>
@@ -64,7 +68,7 @@ const EditModePage = (props) => {
 const mapStateToProps = (state) => {
   return {
     editMode: state.nodes.editMode,
-    editModeSelectedNodes: state.nodes.editModeSelectedNodes
+    editModeSelectedNodes: state.nodes.editModeSelectedNodes,
   }
 }
 

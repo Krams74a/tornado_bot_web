@@ -8,9 +8,12 @@ const SET_CURRENT_NODE_LOGS = "nodes/SET_CURRENT_NODE_LOGS"
 const SET_NODES_LIST = "nodes/SET_NODES_LIST"
 const SET_LAST_LOGS = "nodes/SET_LAST_LOGS"
 const SET_EDIT_MODE = "nodes/SET_EDIT_MODE"
-const SET_ADD_SELECTED_NODE = "nodes/SET_ADD_SELECTED_NODE"
+const ADD_SELECTED_NODE = "nodes/ADD_SELECTED_NODE"
+const SET_SELECTED_NODES = "nodes/SET_SELECTED_NODES"
 const DELETE_SELECTED_NODE = "nodes/DELETE_SELECTED_NODE"
 const CLEAR_SELECTED_NODES = "nodes/CLEAR_SELECTED_NODES"
+const UPDATE_SELECTED_NODE = "nodes/UPDATE_SELECTED_NODE"
+const CHANGE_NODE_HIGHLIGHT = "nodes/CHANDE_NODE_HIGHLIGHT"
 
 let initialState = {
     racks: [
@@ -145,10 +148,26 @@ export const nodesReducer = (state = initialState, action) => {
                 ...state,
                 editMode: action.editMode
             }
-        case SET_ADD_SELECTED_NODE:
+        case ADD_SELECTED_NODE:
             return {
                 ...state,
-                editModeSelectedNodes: [...state.editModeSelectedNodes, action.node],
+                editModeSelectedNodes: [...state.editModeSelectedNodes, action.node].sort((prevNode, nextNode) => {return parseInt(prevNode.id.replace("node", "")) - parseInt(nextNode.id.replace("node", ""))}),
+            }
+        case CHANGE_NODE_HIGHLIGHT:
+            let selectedNodeIds = []
+            state.editModeSelectedNodes.forEach(node => {
+                selectedNodeIds.push(node.id)
+            })
+            console.log(selectedNodeIds)
+            console.log(state.racks.map(rack => rack.map(shelf => shelf.map(node => selectedNodeIds.includes(node.id) ? {...node, isHighlight: true} : node))))
+            return {
+                ...state,
+                racks: state.racks.map(rack => rack.map(shelf => shelf.map(node => selectedNodeIds.includes(node.id) ? {...node, isHighlight: true} : node)))
+            }
+        case SET_SELECTED_NODES:
+            return {
+                ...state,
+                editModeSelectedNodes: action.nodes
             }
         case DELETE_SELECTED_NODE:
             console.log(action)
@@ -161,6 +180,14 @@ export const nodesReducer = (state = initialState, action) => {
                 ...state,
                 editModeSelectedNodes: []
             }
+        case UPDATE_SELECTED_NODE:
+            console.log(action)
+            return {
+                ...state,
+                editModeSelectedNodes: (state.editModeSelectedNodes.map
+                (node => node.id === action.node.id ?
+                    action.node : node)).sort((prevNode, nextNode) => {return parseInt(prevNode.id.replace("node", "")) - parseInt(nextNode.id.replace("node", ""))})
+            }
         default:
             return state
     }
@@ -172,14 +199,24 @@ export const setCurrentNodeLogs = (currentNodeLogs) => ({ type: SET_CURRENT_NODE
 export const setNodesList = (nodesList) => ({ type: SET_NODES_LIST, nodesList })
 export const setLastLogs = (logsInfo) => ({ type: SET_LAST_LOGS, logsInfo })
 export const setEditMode = (editMode) => ({ type: SET_EDIT_MODE, editMode })
-export const addSelectedNode = (node) => ({ type: SET_ADD_SELECTED_NODE, node })
+export const addSelectedNode = (node) => ({ type: ADD_SELECTED_NODE, node })
+export const setSelectedNodes = (nodes) => ({ type: SET_SELECTED_NODES, nodes })
+export const updateSelectedNode = (node) => ({ type: UPDATE_SELECTED_NODE, node })
 export const deleteSelectedNode = (nodeId) => ({ type: DELETE_SELECTED_NODE, nodeId })
 export const clearSelectedNodes = () => ({ type: CLEAR_SELECTED_NODES })
+
 
 export const getNode = (nodeId) => async (dispatch) => {
     let data = await nodesAPI.getNode(nodeId)
     let nodeInfo = data.data[0];
     dispatch(setCurrentNode(nodeInfo))
+    return nodeInfo
+}
+
+export const updateSelectedNodes = (selectedNodes) => async (dispatch) => {
+    selectedNodes.forEach(node => {
+        dispatch(updateSelectedNode(node))
+    });
 }
 
 export const getNodeLogs = (nodeId) => async (dispatch) => {
@@ -332,9 +369,9 @@ export const addLog = (newLog) => async (dispatch) => {
     }
 }
 
-export const updateNodeState = (currentNode, loggedUserInfo, newState) => async (dispatch) => {
-    console.log(currentNode, loggedUserInfo, newState)
-    let data = await nodesAPI.updateNodeState(currentNode.id, newState)
+export const updateNode = (node, log, loggedUserInfo) => async (dispatch) => {
+    console.log(node, loggedUserInfo)
+    let data = await nodesAPI.updateNode(node)
     if (data.message === "success") {
         let date = new Date().toString();
         date = date.split(" ")
@@ -347,15 +384,16 @@ export const updateNodeState = (currentNode, loggedUserInfo, newState) => async 
         date = date.join(" ")
 
         const newLog = {
-            id: currentNode.id,
-            mac: currentNode.mac,
+            id: node.id,
+            mac: node.mac,
             worker: loggedUserInfo.lastName + " " + loggedUserInfo.firstName,
             date: date,
-            log: `Состояние узла было изменено на ${newState}`
+            log: log
         }
         dispatch(addLog(newLog))
-        dispatch(getNode(currentNode.id))
-        dispatch(getNodes())
+        dispatch(getNode(node.id))
+        dispatch(updateSelectedNode(node))
+        dispatch(initializeApp())
         return true
     } else {
         return false
@@ -365,7 +403,6 @@ export const updateNodeState = (currentNode, loggedUserInfo, newState) => async 
 export const addLogs = (nodesList, newLog) => async (dispatch) => {
     let data = await nodesAPI.addLogs(nodesList, newLog)
     if (data.message === "success") {
-        dispatch(clearSelectedNodes())
         dispatch(initializeApp())
         return true
     }

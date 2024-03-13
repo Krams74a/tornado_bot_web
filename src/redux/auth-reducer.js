@@ -1,5 +1,6 @@
 import { authAPI } from "../api/api"
 import {decodeToken} from "react-jwt"
+import { getLists } from "./lists-reducer"
 
 const SET_LOGGED_USER_DATA = "auth-reducer/SET_LOGGED_USER_DATA"
 const SET_IS_AUTH = "auth-reducer/SET_IS_AUTH"
@@ -60,6 +61,7 @@ export const isAuth = () => async (dispatch) => {
         const myDecodedToken = decodeToken(userToken)
         dispatch(setLoggedUserData(myDecodedToken))
         dispatch(setIsAuth(true))
+        return myDecodedToken
     } else {
         dispatch(setLoggedUserData({username:"", firstName:"", lastName: "", telegramId: 0, role: ""}))
         dispatch(setIsAuth(false))

@@ -5,9 +5,8 @@
      height: 300px;
      width: 280px;
      margin:10px;
-     display: grid;
-     grid-template-columns: 10% 90%;
-     grid-template-areas: "blocks nodes";
+     display: flex;
+
 
      margin-bottom: 25px;
 }

@@ -50,7 +50,7 @@ const ServerContent = (props) => {
                     </div>
                </div>
                <div className={s.serverContent}>
-                    <Blocks></Blocks>
+                    {props.type && props.type === "small" || <Blocks></Blocks>}
                     <Nodes deleteSelectedNode={props.deleteSelectedNode} rack={props.rack} editMode={props.editMode} addSelectedNode={props.addSelectedNode}></Nodes>
                </div>
           </div>

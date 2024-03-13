@@ -1,14 +1,12 @@
-import { Button, Row } from "react-bootstrap"
+import { Button, Row, Card, Form } from "react-bootstrap"
 import React, { useState } from "react";
-import { Field, Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup"
 import { Link } from "react-router-dom"
 import s from "./AddLog.module.css"
-
+import { useFormik } from "formik";
 
 const AddLog = (props) => {
-    const [error, setError] = useState("")
-    const [success, setSuccess] = useState("")
+    console.log(props)
     const SignupSchema = Yup.object().shape({
         content: Yup.string()
     })
@@ -25,7 +23,19 @@ const AddLog = (props) => {
         return date
     }
 
+    const formik = useFormik({
+        validationSchema: SignupSchema,
+        enableReinitialize: true,
+        initialValues: {
+            log: ""
+        },
+        onSubmit: (values, { resetForm }) => {
+            onSubmit(values, resetForm)
+        }
+    })
+
     const onSubmit = (values, resetForm) => {
+        console.log(values)
         let date = new Date().toString();
         date = dateToDBFormat(date)
         if (values.log !== "") {
@@ -36,45 +46,32 @@ const AddLog = (props) => {
                 date: date,
                 log: values.log
             }
-    
-            let isSuccess = props.addLog(newLog)
-            if (isSuccess) {
-                setSuccess("Успешно")
-                resetForm({})
-            } else {
-                setError("Ошибка")
-            }
+
+            props.addLog(newLog)
+            props.showToastMessage("success", "Лог успешно добавлен")
+            resetForm({})
         }
     }
 
     return (
         props.isAuth ? <div className={s.addLog}>
-            <Formik initialValues={{ log: '', }}
-                validationSchema={SignupSchema}
-                onSubmit={(values, { resetForm }) => {
-                    onSubmit(values, resetForm)
-                }}>
-                <Form>
-                    <Row className="mb-3" data-bs-theme="dark">
-                        <div style={error || success ? { marginBottom: "1rem" } : {}}>
-                            <label htmlFor="log">Добавить лог</label>
-                            <Field
+            <Card bg="dark" style={{ padding: "10px", color:"white" }}>
+                <Form onSubmit={formik.handleSubmit} style={{ padding: "10px", color: "white" }}>
+                    <Form.Group controlId={"log"} style={{display:"flex", gap: "10px", flexDirection: "column"}}>
+                            <Form.Label style={{fontWeight: "700"}}>Добавить лог</Form.Label>
+                            <Form.Control
                                 as={"textarea"}
                                 name="log"
                                 className="form-control"
                                 type="text"
                                 placeholder="Что сейчас с узлом?"
+                                onChange={formik.handleChange}
+                                value={formik.values.log}
                             />
-                            <ErrorMessage component="div" name="log" className="alert alert-danger col-md-4" style={{ padding: "5px", marginBottom: "5px", marginTop: "5px", width: "100%" }} />
-                        </div>
-                    </Row>
-                    <div className="col-md-4">
-                        <Button type="submit">Добавить</Button>
-                        <Row className="mb-3">
-                        </Row>
-                    </div>
+                        <Button style={{width: props.buttonWidth}} type="submit">Добавить</Button>
+                    </Form.Group>
                 </Form>
-            </Formik>
+            </Card>
         </div>
             : <div className={s.addLog}>
                 Чтобы добавить логи необходимо <Link to="/login">войти</Link>.

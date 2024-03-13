@@ -1,13 +1,11 @@
 import { isAuth } from "./auth-reducer"
+import { getLists, getPublicLists } from "./lists-reducer"
 import { getLastLogs, getNodes } from "./nodes-reducer"
 
 const INITIALIZED_SUCCESS = "app-reducer/INITIALIZED_SUCCESS"
 
 let initialState = {
-    initialized: false,
-    colors: {
-        backgroundColor: "#424242"
-    }
+    initialized: false
 }
 
 export const appReducer = (state = initialState, action) => {
@@ -25,14 +23,17 @@ export const appReducer = (state = initialState, action) => {
 export const initializingSuccess = () => ({type: INITIALIZED_SUCCESS})
 
 export const initializeApp = () => (dispatch) => {
+    console.log("INITIALIZE ")
     try {
         let promise = dispatch(isAuth())
-        promise.then(() => {
-            let isSuccess =  dispatch(getNodes())
+        promise.then((token) => {
+            console.log(token)
+            let isSuccess = dispatch(getNodes())
+            dispatch(getLists(token.username))
+            dispatch(getPublicLists())
             if (isSuccess) {
                 dispatch(getLastLogs())
                 dispatch(initializingSuccess())
-                return true
             }
             else {
                 return false

@@ -11,7 +11,7 @@ const Header = (props) => {
     const navigate = useNavigate()
     const location = useLocation();
     const path = location.pathname.split("/")[1];
-    console.log("RERENDER")
+
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" style={{ backgroundColor: "#424242" }}>
             <Container style={{ maxWidth: "95%" }}>
@@ -25,13 +25,16 @@ const Header = (props) => {
                             style={{ marginRight: "7px", color: "white", borderRadius: "0px", borderBottom: `${path === "list" ? "2px solid white" : ""}` }}>Список</Button>
                         <Button onClick={() => navigate("/diagram")} className={`nav-link`}
                             style={{ marginRight: "7px", color: "white", borderRadius: "0px", borderBottom: `${path === "diagram" ? "2px solid white" : ""}` }}>Бублик</Button>
+                            <Button onClick={() => navigate("/lists")} className={`nav-link`}
+                            style={{ marginRight: "7px", color: "white", borderRadius: "0px", borderBottom: `${path === "lists" ? "2px solid white" : ""}` }}>Списки</Button>
                     </Nav>
                     <Nav>
-                        {props.loggedUserInfo.username ? <Dropdown>
+                        {props.loggedUserInfo.username ? <Dropdown data-bs-theme="dark">
                             <Dropdown.Toggle variant="dark" id="dropdown-basic">
                                 {props.loggedUserInfo.username}
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => navigate("/myLists")}>Мои списки</Dropdown.Item>
                                 <Dropdown.Item onClick={props.logout}>Выйти</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown> : <Button variant={"dark"} onClick={() => navigate('/login')}>Войти</Button>}

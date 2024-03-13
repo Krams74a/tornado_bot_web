@@ -8,7 +8,7 @@ const NodeRack = (props) => {
                return <Node 
                key={index} 
                id={node.id} 
-               state={node.statement} 
+               statement={node.statement} 
                mac={node.mac} 
                ip={node.ip} 
                guid={node.guid} 

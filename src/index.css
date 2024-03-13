@@ -6,13 +6,13 @@
 
 body {
      margin: 0;
-
+     background-color: #1d1d1d;
 }
 
 html {
      --color-text-white: white;
      --color-text-black: black;
-     --color-background: #222222;
+     --color-background: #1d1d1d;
      --color-container: #424242;
      --color-container-border: #616161;
 
