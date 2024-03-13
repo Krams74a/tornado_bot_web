@@ -27,17 +27,26 @@ export const initializeApp = () => (dispatch) => {
     try {
         let promise = dispatch(isAuth())
         promise.then((token) => {
-            console.log(token)
-            let isSuccess = dispatch(getNodes())
-            dispatch(getLists(token.username))
-            dispatch(getPublicLists())
-            if (isSuccess) {
-                dispatch(getLastLogs())
-                dispatch(initializingSuccess())
+            if (token !== 0) {
+                let isSuccess = dispatch(getNodes())
+                dispatch(getLists(token.username))
+                dispatch(getPublicLists())
+                if (isSuccess) {
+                    dispatch(getLastLogs())
+                    dispatch(initializingSuccess())
+                }
+                else {
+                    return false
+                }
+            } else {
+                let isSuccess = dispatch(getNodes())
+                dispatch(getPublicLists())
+                if (isSuccess) {
+                    dispatch(getLastLogs())
+                    dispatch(initializingSuccess())
+                }
             }
-            else {
-                return false
-            }
+            
         })
     } 
     catch {
