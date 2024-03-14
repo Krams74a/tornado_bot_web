@@ -4,7 +4,8 @@ import { Chart } from "react-google-charts";
 import { compose } from "redux";
 
 const DiagramPage = (props) => {
-    let data = props.nodesList
+    if (props.nodesList) {
+        let data = props.nodesList
     let newData = []
     data.forEach(node => {
         newData.push(node.statement)
@@ -59,6 +60,10 @@ const DiagramPage = (props) => {
             />
         </div>
     )
+    } else {
+        return <div>Loading...</div>
+    }
+    
 }
 
 const mapStateToProps = (state) => {
