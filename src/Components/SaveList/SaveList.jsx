@@ -18,7 +18,7 @@ const SaveList = ({ showToastMessage, editModeSelectedNodes, showInfo, handleClo
         enableReinitialize: true,
         initialValues: {
             listName: "",
-            isPublic: true
+            isPublic: "false"
         },
         onSubmit: (values, { resetForm }) => {
             if (values.listName !== "") {

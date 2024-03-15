@@ -30,7 +30,8 @@ const DiagramPage = (props) => {
     
 
     diagramData.unshift(["Состояние", "Количество"])
-
+    
+    console.log(diagramData)
     const options = {
         title: "Узлы Торнадо",
         pieHole: 0.2,

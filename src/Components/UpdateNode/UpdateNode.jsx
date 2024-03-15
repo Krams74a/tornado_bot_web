@@ -82,7 +82,7 @@ const UpdateNode = ({showInfo, handleCloseInfo, currentNode, loggedUserInfo, sho
                     guid: values.guid,
                     ip: values.ip,
                     statement: values.statement,
-                    who: values.statement === "работает" ? null : values.who
+                    who: values.statement === "работает" ? "" : values.who
                 }
                 const logs = createLogsByChanges(currentNode, node)
                 if (logs.length > 0) {
